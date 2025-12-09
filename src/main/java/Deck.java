@@ -32,12 +32,12 @@ public class Deck {
             return null;
         }
         cardsLeft--;
-        return cards.get(cardsLeft + 1);
+        return cards.get(cardsLeft);
 
     }
 
     public void shuffle(){
-        for(int i = cards.size(); i > 0; i--){
+        for(int i = cards.size() - 1; i > 0; i--){
             int random = (int)(Math.random()*i);
             Card copy = cards.get(i);
             cards.set(i, cards.get(random));
