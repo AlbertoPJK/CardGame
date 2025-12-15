@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Game {
 
+    //declare variables
     private static Player player1;
     private static Player player2;
 
@@ -11,9 +12,14 @@ public class Game {
 
         Scanner input = new Scanner(System.in);
 
+        //prints instructions
+        printInstructions();
+
+        //run set up game method
         setupGame();
 
-        while (true) {
+
+        while (true) {//keeps playing round until one player runs out of cards
             playRound();
 
             if (player1.getHand().isEmpty()) {
@@ -71,8 +77,8 @@ public class Game {
         // Shuffles deck
         deck.shuffle();
 
-        ArrayList<Card> hand1 = new ArrayList<>();
-        ArrayList<Card> hand2 = new ArrayList<>();
+        ArrayList<Card> hand1 = new ArrayList<>();//first hand
+        ArrayList<Card> hand2 = new ArrayList<>();//second hand
 
         while (deck.getCardsLeft() > 0) {
             hand1.add(deck.deal());
@@ -85,7 +91,12 @@ public class Game {
 
     }
 
+    private static void printInstructions(){
+        System.out.println("this is war game\nwar game is simple\nyou have a set of cards and you place it against your opponent whoever has the highest card keeps them");
+    }
+
     private static String evaluateWinner(Card card1, Card card2){
+        // checks which card has greater value
         if (card1.getValue() > card2.getValue()) {
             return "Win";
         }
@@ -99,6 +110,7 @@ public class Game {
 
 
     private static void playRound(){
+        //runs evaluateWinner class, if one winner is decided, adds point, cards go to him, playRound ends
 
         Scanner input = new Scanner(System.in);
 
@@ -145,6 +157,7 @@ public class Game {
 
         Scanner input = new Scanner(System.in);
 
+        // If there is less than 4 cards, which is how many are used to go to war, all cards go to other and game ends
         while (true) {
             if (hand1.size() < 4) {
                 System.out.println("Computer doesn't have enough cards for war. You win the pot!");
@@ -157,11 +170,13 @@ public class Game {
                 return;
             }
 
+            // Adds 3 unknown cards each to pot and removes from deck
             for (int i = 0; i < 3; i++) {
                 pot.add(hand1.remove(0));
                 pot.add(hand2.remove(0));
             }
 
+            // Fourth card is war card, it is saved as p and c WarCard and also added to pot
             Card pWarCard = hand1.remove(0);
             Card cWarCard = hand2.remove(0);
             pot.add(pWarCard);
@@ -170,6 +185,7 @@ public class Game {
             System.out.println("WAR cards: Three face down fourth ones fight\nThe Computer places\nOne...\nTwo...\nThree..." +
                     "\nYou Place...\nOne...\nTwo...\nThree...");
 
+            // Suspense builder
             System.out.print("Wanna reveal the last cards? (y/n) ");
             String response = input.nextLine().toLowerCase();
             if (!response.equals("y")) {
@@ -179,8 +195,11 @@ public class Game {
             System.out.println(player1.getName() + " plays: " + cWarCard);
             System.out.println(player2.getName() + " play: " + pWarCard);
 
+            // Sees result of war cards
             String result = evaluateWinner(pWarCard, cWarCard);
 
+            // Returns if there is a winner, if not, loops through again, until there is.
+            // Pot keeps incrementing if there isn't a winner
             if (result.equals("Win")) {
                 System.out.println("You win the war and take the pot!");
                 hand1.addAll(pot);
