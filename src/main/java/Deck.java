@@ -11,6 +11,7 @@ public class Deck {
         for(int i = 0; i < rank.size(); i++){
             for(int j = 0; j < suit.size(); j++){
                 Card card = new Card(rank.get(i), suit.get(j), value.get(i));
+                // "src/main/resources/Cards/"1.png
 
                 cards.add(card);
                 cardsLeft++;
