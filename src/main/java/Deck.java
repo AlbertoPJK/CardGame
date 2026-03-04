@@ -1,8 +1,10 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Deck {
 
     ArrayList<Card> cards = new ArrayList<>();
+    ArrayList<Image> images = new ArrayList<>();
     private int cardsLeft;
 
 
@@ -11,7 +13,7 @@ public class Deck {
         for(int i = 0; i < rank.size(); i++){
             for(int j = 0; j < suit.size(); j++){
                 Card card = new Card(rank.get(i), suit.get(j), value.get(i));
-                // "src/main/resources/Cards/"1.png
+                 images.add("src/main/resources/Cards/"i.png);
 
                 cards.add(card);
                 cardsLeft++;

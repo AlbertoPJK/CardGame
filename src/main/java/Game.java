@@ -60,11 +60,12 @@ public class Game {
     private void setupGame() {
 
         ArrayList<Integer> value = new ArrayList<>();
-        for (int i = 2; i < 15; i++) {
+        for (int i = 1; i < 14; i++) {
             value.add(i);
         }
 
         ArrayList<String> rank = new ArrayList<>();
+        rank.add("Ace");
         rank.add("2");
         rank.add("3");
         rank.add("4");
@@ -77,13 +78,12 @@ public class Game {
         rank.add("Jack");
         rank.add("Queen");
         rank.add("King");
-        rank.add("Ace");
 
         ArrayList<String> suit = new ArrayList<>();
-        suit.add("Clubs");
-        suit.add("Hearts");
         suit.add("Spades");
+        suit.add("Hearts");
         suit.add("Diamonds");
+        suit.add("Clubs");
 
         // Creates universal deck (52 cards)
         Deck deck = new Deck(rank, suit, value);
