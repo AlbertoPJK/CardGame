@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
@@ -7,6 +9,7 @@ public class Game {
     //declare variables
     private Player player1;
     private Player player2;
+    private Deck deck;
 
     private GameView window;
 
@@ -26,10 +29,6 @@ public class Game {
         //prints instructions
         printInstructions();
 
-        //run set up game method
-        setupGame();
-
-
         while (true) {//keeps playing round until one player runs out of cards
             playRound();
 
@@ -40,7 +39,6 @@ public class Game {
                 player2.addPoints(1);
                 break;
             }
-
 
             System.out.println("New Round?");
 
@@ -54,6 +52,10 @@ public class Game {
             System.out.println(roundCounter);
 
         }
+    }
+
+    public Deck getDeck() {
+        return deck;
     }
 
     // Method that sets up the game by creating players, creating and shuffling deck, and handing equal card number
@@ -85,8 +87,14 @@ public class Game {
         suit.add("Diamonds");
         suit.add("Clubs");
 
+        ArrayList<Image> images = new ArrayList<>();
+        for(int i = 1; i <= 52; i++) {
+            Image image = new ImageIcon("src/main/resources/Cards/" + i + ".png").getImage();
+            images.add(image);
+        }
+
         // Creates universal deck (52 cards)
-        Deck deck = new Deck(rank, suit, value);
+        deck = new Deck(rank, suit, value, images);
 
         // Shuffles deck
         deck.shuffle();
@@ -101,7 +109,6 @@ public class Game {
 
         player1 = new Player("Computer", hand1);
         player2 = new Player("You", hand2);
-
 
     }
 
@@ -148,6 +155,7 @@ public class Game {
             Collections.shuffle(cardPot);
             hand2.addAll(cardPot);
             System.out.println("You win. You have: " + hand2.size() + "\nComputer has: " + hand1.size());
+            window.results(cFirst, pFirst, "Win", hand1.size(), hand2.size());
         }
         else if (result.equals("Lose")) {
             cardPot.add(pFirst);
@@ -155,6 +163,7 @@ public class Game {
             Collections.shuffle(cardPot);
             hand1.addAll(cardPot);
             System.out.println("You LooooyST. You have: " + hand2.size() + "\nComputer has: " + hand1.size());
+            window.results(cFirst, pFirst, "Lose", hand1.size(), hand2.size());
         }
         else {
 
@@ -209,11 +218,13 @@ public class Game {
                 System.out.println("You win the war and take the pot!");
                 Collections.shuffle(pot);
                 hand2.addAll(pot);
+                window.results(cWarCard, pWarCard, "You survived the War.\nWin!!!", hand1.size(), hand2.size());
                 return;
             } else if (result.equals("Lose")) {
                 System.out.println("Computer wins the war");
                 Collections.shuffle(pot);
                 hand1.addAll(pot);
+                window.results(cWarCard, pWarCard, "You Lost the War :(", hand1.size(), hand2.size());
                 return;
             } else {
                 System.out.println("WAR again!");
