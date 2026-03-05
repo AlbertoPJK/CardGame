@@ -1,18 +1,21 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Deck {
 
     ArrayList<Card> cards = new ArrayList<>();
-    private int cardsLeft;
+    private int cardsLeft = 0;
 
 
-    public Deck(ArrayList<String> rank, ArrayList<String> suit, ArrayList<Integer> value){
-        // Generates cards with a nested for loop using ranks, suit, value
+    public Deck(ArrayList<String> rank, ArrayList<String> suit, ArrayList<Integer> value, ArrayList<Image> images){
+        int imageCounter = 0;
+        // Generates cards with a nested for loop using ranks, suit, value, and image
         for(int i = 0; i < rank.size(); i++){
             for(int j = 0; j < suit.size(); j++){
-                Card card = new Card(rank.get(i), suit.get(j), value.get(i));
-
+                Card card = new Card(rank.get(i), suit.get(j), value.get(i), images.get(imageCounter));
                 cards.add(card);
+                imageCounter++;
                 cardsLeft++;
             }
         }
