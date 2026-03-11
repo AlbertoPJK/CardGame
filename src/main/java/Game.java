@@ -203,8 +203,10 @@ public class Game implements MouseListener {
         }
     }
 
+    // Necessary functions for the mouseListener functionality, only used mousePressed for this progra
     public void mouseClicked(MouseEvent e) {}
 
+    // What to do when the user presses the screen
     public void mousePressed(MouseEvent e) {
         if (!gameIsOver) {
             roundCounter++;
@@ -216,7 +218,6 @@ public class Game implements MouseListener {
                 gameIsOver = true;
             } else if (player2.getHand().isEmpty()) {
                 player2.addPoints(1);
-                System.out.println("2");
                 gameIsOver=true;
 
             }
