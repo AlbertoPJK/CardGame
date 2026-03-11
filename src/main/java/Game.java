@@ -1,57 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
 
-public class Game {
+public class Game implements MouseListener {
 
     //declare variables
     private Player player1;
     private Player player2;
     private Deck deck;
+    int roundCounter;
+    boolean gameIsOver;
 
     private GameView window;
 
     public Game() {
         window = new GameView(this);
         setupGame();
-    }
-
-    public void playWar() {
-
-        Scanner input = new Scanner(System.in);
-
-        int roundCounter;
-
         roundCounter = 0;
+        gameIsOver=false;
 
-        //prints instructions
-        printInstructions();
-
-        while (true) {//keeps playing round until one player runs out of cards
-            playRound();
-
-            if (player1.getHand().isEmpty()) {
-                player1.addPoints(1);
-                break;
-            } else if (player2.getHand().isEmpty()) {
-                player2.addPoints(1);
-                break;
-            }
-
-            System.out.println("New Round?");
-
-            String confirm = input.nextLine();
-
-            if(!confirm.equals("y")){
-                break;
-            }
-
-            roundCounter++;
-            System.out.println(roundCounter);
-
-        }
+        this.window.addMouseListener(this);
     }
 
     public Deck getDeck() {
@@ -132,8 +105,6 @@ public class Game {
 
     private void playRound(){
         //runs evaluateWinner class, if one winner is decided, adds point, cards go to him, playRound ends
-
-        Scanner input = new Scanner(System.in);
 
         ArrayList<Card> cardPot = new ArrayList<>();
 
@@ -232,9 +203,44 @@ public class Game {
         }
     }
 
+    // Necessary functions for the mouseListener functionality, only used mousePressed for this progra
+    public void mouseClicked(MouseEvent e) {}
+
+    // What to do when the user presses the screen
+    public void mousePressed(MouseEvent e) {
+        if (!gameIsOver) {
+            roundCounter++;
+            System.out.println(roundCounter);
+            playRound();
+
+            if (player1.getHand().isEmpty()) {
+                player1.addPoints(1);
+                gameIsOver = true;
+            } else if (player2.getHand().isEmpty()) {
+                player2.addPoints(1);
+                gameIsOver=true;
+
+            }
+
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    public void mouseExited(MouseEvent e) {
+
+    }
+
     public static void main(String[] args) {
         Game game = new Game();
-        game.playWar();
+        game.printInstructions();
+        game.playRound();
     }
 }
 
