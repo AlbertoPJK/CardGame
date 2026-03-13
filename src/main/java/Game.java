@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Collections;
 
 public class Game {
@@ -10,55 +9,43 @@ public class Game {
     private Player player1;
     private Player player2;
     private Deck deck;
-
     private GameView window;
+    private int roundCounter = 0;
 
     public Game() {
+        setupGame(); // Do this FIRST so the deck isn't null
         window = new GameView(this);
-        setupGame();
     }
 
-    public void playWar() {
-
-        Scanner input = new Scanner(System.in);
-
-        int roundCounter;
-
-        roundCounter = 0;
-
-        //prints instructions
+    public void startGame() {
         printInstructions();
+    }
 
-        while (true) {//keeps playing round until one player runs out of cards
-            playRound();
-
-            if (player1.getHand().isEmpty()) {
-                player1.addPoints(1);
-                break;
-            } else if (player2.getHand().isEmpty()) {
-                player2.addPoints(1);
-                break;
-            }
-
-            System.out.println("New Round?");
-
-            String confirm = input.nextLine();
-
-            if(!confirm.equals("y")){
-                break;
-            }
-
-            roundCounter++;
-            System.out.println(roundCounter);
-
+    // Triggered by the "Next Round" button in the UI
+    public void playNextRound() {
+        if (player1.getHand().isEmpty() || player2.getHand().isEmpty()) {
+            System.out.println("Game Over! Please hit Restart Game.");
+            window.results(null, null, "Game Over! Hit Restart Game.", player1.getHand().size(), player2.getHand().size());
+            return;
         }
+
+        roundCounter++;
+        System.out.println("Round: " + roundCounter);
+        playRound();
+    }
+
+    // Triggered by the "Restart Game" button in the UI
+    public void restartGame() {
+        setupGame();
+        roundCounter = 0;
+        window.resetView();
+        System.out.println("\n--- GAME RESTARTED ---");
     }
 
     public Deck getDeck() {
         return deck;
     }
 
-    // Method that sets up the game by creating players, creating and shuffling deck, and handing equal card number
     private void setupGame() {
 
         ArrayList<Integer> value = new ArrayList<>();
@@ -93,14 +80,11 @@ public class Game {
             images.add(image);
         }
 
-        // Creates universal deck (52 cards)
         deck = new Deck(rank, suit, value, images);
-
-        // Shuffles deck
         deck.shuffle();
 
-        ArrayList<Card> hand1 = new ArrayList<>();//first hand
-        ArrayList<Card> hand2 = new ArrayList<>();//second hand
+        ArrayList<Card> hand1 = new ArrayList<>();
+        ArrayList<Card> hand2 = new ArrayList<>();
 
         while (deck.getCardsLeft() > 0) {
             hand1.add(deck.deal());
@@ -109,7 +93,6 @@ public class Game {
 
         player1 = new Player("Computer", hand1);
         player2 = new Player("You", hand2);
-
     }
 
     private static void printInstructions(){
@@ -117,7 +100,6 @@ public class Game {
     }
 
     private static String evaluateWinner(Card card1, Card card2){
-        // checks which card has greater value
         if (card1.getValue() > card2.getValue()) {
             return "Win";
         }
@@ -129,20 +111,13 @@ public class Game {
         }
     }
 
-
     private void playRound(){
-        //runs evaluateWinner class, if one winner is decided, adds point, cards go to him, playRound ends
-
-        Scanner input = new Scanner(System.in);
-
         ArrayList<Card> cardPot = new ArrayList<>();
-
         ArrayList<Card> hand1 = player1.getHand();
         ArrayList<Card> hand2 = player2.getHand();
 
         Card cFirst = hand1.remove(0);
         Card pFirst = hand2.remove(0);
-
 
         System.out.println("You have a " + pFirst.getRank());
         System.out.println("Computer has a " + cFirst.getRank());
@@ -162,22 +137,15 @@ public class Game {
             cardPot.add(cFirst);
             Collections.shuffle(cardPot);
             hand1.addAll(cardPot);
-            System.out.println("You LooooyST. You have: " + hand2.size() + "\nComputer has: " + hand1.size());
+            System.out.println("You Lost. You have: " + hand2.size() + "\nComputer has: " + hand1.size());
             window.results(cFirst, pFirst, "Lose", hand1.size(), hand2.size());
         }
         else {
-
             war(hand1, hand2, cardPot);
-
         }
     }
 
-
     private void war(ArrayList<Card> hand1, ArrayList<Card> hand2, ArrayList<Card> pot) {
-
-        Scanner input = new Scanner(System.in);
-
-        // If there is less than 4 cards, which is how many are used to go to war, all cards go to other and game ends
         while (true) {
             if (hand2.size() < 4) {
                 System.out.println("You don't have enough. The computer wins the pot!");
@@ -190,13 +158,11 @@ public class Game {
                 return;
             }
 
-            // Adds 3 unknown cards each to pot and removes from deck
             for (int i = 0; i < 3; i++) {
                 pot.add(hand1.remove(0));
                 pot.add(hand2.remove(0));
             }
 
-            // Fourth card is war card, it is saved as p and c WarCard and also added to pot
             Card cWarCard = hand1.remove(0);
             Card pWarCard = hand2.remove(0);
 
@@ -205,15 +171,11 @@ public class Game {
 
             System.out.println("WAR cards: Three face down fourth ones fight\nThe Computer places\nOne...\nTwo...\nThree..." +
                     "\nYou Place...\nOne...\nTwo...\nThree...");
-
             System.out.println(player1.getName() + " plays: " + cWarCard);
             System.out.println(player2.getName() + " play: " + pWarCard);
 
-            // Sees result of war cards
             String result = evaluateWinner(pWarCard, cWarCard);
 
-            // Returns if there is a winner, if not, loops through again, until there is.
-            // Pot keeps incrementing if there isn't a winner
             if (result.equals("Win")) {
                 System.out.println("You win the war and take the pot!");
                 Collections.shuffle(pot);
@@ -234,8 +196,6 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
-        game.playWar();
+        game.startGame();
     }
 }
-
-
