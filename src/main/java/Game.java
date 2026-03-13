@@ -233,8 +233,14 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game();
-        game.playWar();
+        int points = 0;
+        boolean isOn = true;
+
+        while (isOn) {
+            Game game = new Game();
+            game.playWar();
+            Scanner scanner = new Scanner(System.in);
+        }
     }
 }
 
